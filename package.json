@@ -1,0 +1,11 @@
+{
+  "name": "flutter_netlify",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "@notionhq/client": "^0.2.3",
+    "dotenv": "^10.0.0"
+  }
+}
