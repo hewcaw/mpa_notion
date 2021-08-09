@@ -10,7 +10,7 @@ class Service {
     // TODO: Improve this
     String endpoint() {
       if (kReleaseMode)
-        return "https://flutter-notion-netlify-test.netlify.app/functions/goals";
+        return "https://61119e1578ae28499a5d49ab--mpa-notion-040599igjcuhwnzr.netlify.app/functions/goals";
       return "http://localhost:8888/functions/goals";
     }
 
