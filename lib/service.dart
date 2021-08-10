@@ -9,8 +9,7 @@ class Service {
   static Future<List<Goal>> fetchGoals() async {
     // TODO: Improve this
     String endpoint() {
-      if (kReleaseMode)
-        return "https://61119e1578ae28499a5d49ab--mpa-notion-040599igjcuhwnzr.netlify.app/functions/goals";
+      if (kReleaseMode) return "/functions/goals";
       return "http://localhost:8888/functions/goals";
     }
 
