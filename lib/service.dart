@@ -9,7 +9,8 @@ class Service {
   static Future<List<Goal>> fetchGoals() async {
     // TODO: Improve this
     String endpoint() {
-      if (kReleaseMode) return "/functions/goals";
+      if (kReleaseMode)
+        return "https://mpa-notion-widgets.netlify.app/functions/goals";
       return "http://localhost:8888/functions/goals";
     }
 
