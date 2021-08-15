@@ -2,6 +2,7 @@
 .env 
 node_modules/**
 .netlify/**
+.fvm/**
 
 # Miscellaneous
 *.class

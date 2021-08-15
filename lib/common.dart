@@ -50,3 +50,7 @@ class AppColors {
   static const Color fg = Color(0xffFAFAFA);
   static const Color fgGray = Color(0xff5e5e5e);
 }
+
+class Routes {
+  static const goalTracker = '/goal_tracker';
+}

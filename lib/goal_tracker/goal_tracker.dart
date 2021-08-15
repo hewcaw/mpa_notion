@@ -1,114 +1,119 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:html/parser.dart' as htmlparser;
-import 'package:html/dom.dart' as dom;
+import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter/foundation.dart';
 
-import 'common.dart' show NotionColors;
+import '../common.dart' show NotionColors;
 import 'models.dart';
-import 'service.dart';
+import 'repository.dart';
 
-String htmlData = """
-  <div id="my-component"></div>
-""";
-//dom.Document document = htmlparser.parse(htmlData);
-// sanitize or query document here
+export 'models.dart';
+export 'repository.dart';
 
-Widget html = Html(
-  data: htmlData,
-  // document: document,
-);
+class GoalTrackerController extends GetxController {
+  final GoalTrackerRepository _goalTrackerRepository = Get.find<GoalTrackerRepository>();
 
-String viewID = "your-view-id";
+  final RxBool _loading = false.obs;
 
-class Goals extends StatefulWidget {
-  const Goals({Key? key}) : super(key: key);
+  final RxList<Goal> _goals = <Goal>[].obs;
 
-  @override
-  _GoalsState createState() => _GoalsState();
-}
+  /// The users in memory. The controller is responsible of keeping these
+  /// in sync with the users in [repository].
+  List<Goal> get goals => _goals;
 
-class _GoalsState extends State<Goals> {
-  late Future<List<Goal>> futureGoals;
+  bool get loading => _loading.value;
 
-  @override
-  void initState() {
-    super.initState();
-    futureGoals = Service.fetchGoals();
+  onInit() {
+    super.onInit();
+    loadUsers();
   }
 
+  loadUsers() async {
+    _loading.value = true;
+
+    try {
+      _goals(await _goalTrackerRepository.fetchGoals());
+    } catch (e) {
+      // TODO: It is almost always important the user knows about failures like these.
+      // For simplicity, we're not doing it here, but in a real app, the
+      // controller would deal with this.
+      _goals(<Goal>[]);
+    } finally {
+      _loading.value = false;
+    }
+  }
+}
+
+class GoalTrackerView extends GetView<GoalTrackerController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: FutureBuilder<List<Goal>>(
-          future: futureGoals,
-          builder: (context, snapshot) {
-            if (snapshot.hasData)
-              return ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return [
-                    GoalProgress(
-                        percent: snapshot.data![index].progress,
-                        category: snapshot.data![index].category),
-                    Flexible(
-                      child: [
-                        GoalInfo(goal: snapshot.data![index]),
-                        SizedBox(height: 20),
-                        [
-                          TargetItem(target: snapshot.data![index].targets[0]),
-                          SizedBox(height: 4),
-                          TargetItem(target: snapshot.data![index].targets[1]),
-                        ].column(crossAlignment: CrossAxisAlignment.start),
-                      ].column(crossAlignment: CrossAxisAlignment.start).px(10),
-                    ),
-                    [
-                      DueDate(date: snapshot.data![index].date),
-                      SizedBox(height: 8),
-                      GoalCategory(category: snapshot.data![index].category),
-                    ].column(),
-                  ]
-                      .row(crossAlignment: CrossAxisAlignment.start)
-                      .p8()
-                      .card
-                      .rounded
-                      .color(Color(0xff040505))
-                      .make();
-                },
-              );
+      body: Obx(() {
+        if (controller.loading) {
+          // return Center(child: CircularProgressIndicator());
+          return SizedBox(
+            height: 16,
+            width: 16,
+            child: const CircularProgressIndicator(strokeWidth: 4, color: Color(0xff0060df)),
+          ).centered();
+        }
 
-            // return [
-            //   [
-            //     GoalProgress(
-            //         percent: snapshot.data![0].goalPercent,
-            //         category: snapshot.data![0].category),
-            //     // GoalCategory(category: snapshot.data![0].category),
-            //   ].column(),
-            //   SizedBox(width: 16),
-            //   [
-            //     GoalInfo(goal: snapshot.data![0]),
-            //     TargetBlock(targets: snapshot.data![0].targets),
-            //   ].column(crossAlignment: CrossAxisAlignment.start),
-            //   SizedBox(width: 32),
-            //   html,
-            // ]
-            //.column().p8().card.make();
-            else if (snapshot.hasError) return Text('${snapshot.error}');
-
-            return SizedBox(
-              height: 16,
-              width: 16,
-              child: const CircularProgressIndicator(
-                  strokeWidth: 4, color: Color(0xff0060df)),
-            );
+        return ListView.builder(
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          itemCount: controller.goals.length,
+          itemBuilder: (BuildContext context, int index) {
+            return [
+              GoalProgress(
+                  percent: controller.goals[index].progress,
+                  category: controller.goals[index].category),
+              Flexible(
+                child: [
+                  GoalInfo(goal: controller.goals[index]),
+                  SizedBox(height: 20),
+                  [
+                    TargetItem(target: controller.goals[index].targets[0]),
+                    SizedBox(height: 4),
+                    TargetItem(target: controller.goals[index].targets[1]),
+                  ].column(crossAlignment: CrossAxisAlignment.start),
+                ].column(crossAlignment: CrossAxisAlignment.start).px(10),
+              ),
+              [
+                DueDate(date: controller.goals[index].date),
+                SizedBox(height: 8),
+                GoalCategory(category: controller.goals[index].category),
+              ].column(),
+            ]
+                .row(crossAlignment: CrossAxisAlignment.start)
+                .p8()
+                .card
+                .rounded
+                .color(Color(0xff040505))
+                .make();
           },
-        ),
-      ),
+        );
+
+        // TODO: Handle error
+        // else if (snapshot.hasError) return Text('${snapshot.error}');
+
+        // return [
+        //   [
+        //     GoalProgress(
+        //         percent: snapshot.data![0].goalPercent,
+        //         category: snapshot.data![0].category),
+        //     // GoalCategory(category: snapshot.data![0].category),
+        //   ].column(),
+        //   SizedBox(width: 16),
+        //   [
+        //     GoalInfo(goal: snapshot.data![0]),
+        //     TargetBlock(targets: snapshot.data![0].targets),
+        //   ].column(crossAlignment: CrossAxisAlignment.start),
+        //   SizedBox(width: 32),
+        //   html,
+        // ]
+        //.column().p8().card.make();
+      }),
     );
   }
 }
@@ -116,8 +121,7 @@ class _GoalsState extends State<Goals> {
 // TODO: Goal Progress
 // TODO: Different progres color according to their state
 class GoalProgress extends StatelessWidget {
-  const GoalProgress({Key? key, required this.percent, required this.category})
-      : super(key: key);
+  const GoalProgress({Key? key, required this.percent, required this.category}) : super(key: key);
 
   final double percent;
   final String category;
@@ -128,10 +132,7 @@ class GoalProgress extends StatelessWidget {
       radius: 75,
       lineWidth: 7.5,
       percent: percent,
-      center: '${(double.parse(percent.toStringAsFixed(2)) * 100).round()}%'
-          .text
-          .xl
-          .make(),
+      center: '${(double.parse(percent.toStringAsFixed(2)) * 100).round()}%'.text.xl.make(),
       progressColor: Colors.green[500],
       circularStrokeCap: CircularStrokeCap.round,
     );
@@ -185,13 +186,7 @@ class GoalCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return category.text
-        .make()
-        .pSymmetric(v: 1, h: 4)
-        .box
-        .orange500
-        .rounded
-        .make();
+    return category.text.make().pSymmetric(v: 1, h: 4).box.orange500.rounded.make();
   }
 }
 
@@ -238,8 +233,8 @@ class TargetItem extends StatelessWidget {
           ? SizedBox(
               width: 12,
               height: 12,
-              child: const CircularProgressIndicator(
-                  strokeWidth: 2.5, color: NotionColors.fgYellow))
+              child:
+                  const CircularProgressIndicator(strokeWidth: 2.5, color: NotionColors.fgYellow))
           : SizedBox(),
     ], alignment: Alignment.center);
   }
