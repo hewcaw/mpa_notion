@@ -18,7 +18,7 @@ class GoalTrackerController extends GetxController {
 
   final RxList<Goal> _goals = <Goal>[].obs;
 
-  /// The users in memory. The controller is responsible of keeping these
+  /// The goals in memory. The controller is responsible of keeping these
   /// in sync with the users in [repository].
   List<Goal> get goals => _goals;
 
@@ -51,7 +51,6 @@ class GoalTrackerView extends GetView<GoalTrackerController> {
     return Scaffold(
       body: Obx(() {
         if (controller.loading) {
-          // return Center(child: CircularProgressIndicator());
           return SizedBox(
             height: 16,
             width: 16,
@@ -71,12 +70,8 @@ class GoalTrackerView extends GetView<GoalTrackerController> {
               Flexible(
                 child: [
                   GoalInfo(goal: controller.goals[index]),
-                  SizedBox(height: 20),
-                  [
-                    TargetItem(target: controller.goals[index].targets[0]),
-                    SizedBox(height: 4),
-                    TargetItem(target: controller.goals[index].targets[1]),
-                  ].column(crossAlignment: CrossAxisAlignment.start),
+                  SizedBox(height: 28),
+                  TargetList(targets: controller.goals[index].targets)
                 ].column(crossAlignment: CrossAxisAlignment.start).px(10),
               ),
               [
@@ -96,29 +91,11 @@ class GoalTrackerView extends GetView<GoalTrackerController> {
 
         // TODO: Handle error
         // else if (snapshot.hasError) return Text('${snapshot.error}');
-
-        // return [
-        //   [
-        //     GoalProgress(
-        //         percent: snapshot.data![0].goalPercent,
-        //         category: snapshot.data![0].category),
-        //     // GoalCategory(category: snapshot.data![0].category),
-        //   ].column(),
-        //   SizedBox(width: 16),
-        //   [
-        //     GoalInfo(goal: snapshot.data![0]),
-        //     TargetBlock(targets: snapshot.data![0].targets),
-        //   ].column(crossAlignment: CrossAxisAlignment.start),
-        //   SizedBox(width: 32),
-        //   html,
-        // ]
-        //.column().p8().card.make();
       }),
     );
   }
 }
 
-// TODO: Goal Progress
 // TODO: Different progres color according to their state
 class GoalProgress extends StatelessWidget {
   const GoalProgress({Key? key, required this.percent, required this.category}) : super(key: key);
@@ -190,15 +167,16 @@ class GoalCategory extends StatelessWidget {
   }
 }
 
-class TargetBlock extends StatelessWidget {
-  const TargetBlock({Key? key, required this.targets}) : super(key: key);
+class TargetList extends StatelessWidget {
+  const TargetList({Key? key, required this.targets}) : super(key: key);
 
   final List<Target> targets;
 
   @override
   Widget build(BuildContext context) {
     return targets
-        .map((target) => TargetItem(target: target))
+        .map((target) => [TargetItem(target: target), SizedBox(height: 8)])
+        .expand((element) => element)
         .toList()
         .column(crossAlignment: CrossAxisAlignment.start);
   }
@@ -240,7 +218,6 @@ class TargetItem extends StatelessWidget {
   }
 }
 
-// TODO: This will go under TargetItem?
 class TaskCount extends StatelessWidget {
   const TaskCount({Key? key, required this.target}) : super(key: key);
 
@@ -268,7 +245,3 @@ class TaskCount extends StatelessWidget {
     // ].column();
   }
 }
-
-// TODO: Goal Text
-// TODO: Task Progress
-// TODO: Target Block
