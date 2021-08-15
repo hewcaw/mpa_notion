@@ -13,7 +13,13 @@ exports.handler = async function(event, context) {
 			relation: {
 					is_not_empty: true
 			}
-		}
+		},
+		sorts: [
+	    {
+	      property: "Goal Priority",
+	      direction: "ascending"
+	    }
+	  ]
 	});
 	
 	// const data = {}
