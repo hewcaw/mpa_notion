@@ -11,6 +11,7 @@ _$_Goal _$_$_GoalFromJson(Map<String, dynamic> json) {
     name: json['name'] as String,
     description: json['description'] as String,
     category: json['category'] as String,
+    categoryColor: json['categoryColor'] as String,
     date: json['date'] as String? ?? '',
     targets: (json['targets'] as List<dynamic>)
         .map((e) => Target.fromJson(e as Map<String, dynamic>))
@@ -22,6 +23,7 @@ Map<String, dynamic> _$_$_GoalToJson(_$_Goal instance) => <String, dynamic>{
       'name': instance.name,
       'description': instance.description,
       'category': instance.category,
+      'categoryColor': instance.categoryColor,
       'date': instance.date,
       'targets': instance.targets.map((e) => e.toJson()).toList(),
     };

@@ -41,9 +41,11 @@ final darkTheme = ThemeData(
 class NotionColors {
   static const Color fg = Color(0xe6FFFFFF);
   static const Color bg = Color(0xff2F3437);
+  static const Color fgOrange = Color(0xffFFA344);
   static const Color fgYellow = Color(0xffFFDC49);
   static const Color fgGreen = Color(0xff4DAB9A);
   static const Color fgBlue = Color(0xff529CCA);
+  static const Color fgPurple = Color(0xff9A6DD7);
 }
 
 class AppColors {

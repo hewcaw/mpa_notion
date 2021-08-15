@@ -8,12 +8,13 @@ import 'package:flutter/foundation.dart';
 
 import 'models.dart' show Goal;
 
+// TODO: If task timed out then refetch, also create a service helper to reuse
+//       the function.
 class GoalTrackerRepository extends GetxService {
   Future<List<Goal>> fetchGoals() async {
     // TODO: Improve this
     String endpoint() {
-      if (kReleaseMode)
-        return "https://mpa-notion-widgets.netlify.app/functions/goals";
+      if (kReleaseMode) return "https://mpa-notion-widgets.netlify.app/functions/goals";
       return "http://localhost:8888/functions/goals";
     }
 

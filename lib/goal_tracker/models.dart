@@ -12,6 +12,7 @@ class Goal with _$Goal {
     required String name,
     required String description,
     required String category,
+    required String categoryColor,
     // DateTime? date,
     @Default('') String date,
     required List<Target> targets,
@@ -38,8 +39,7 @@ class Goal with _$Goal {
 
   factory Goal.fromJson(Map<String, dynamic> json) => _$GoalFromJson(json);
 
-  static toList(List<dynamic> goals) =>
-      goals.map<Goal>((i) => Goal.fromJson(i)).toList();
+  static toList(List<dynamic> goals) => goals.map<Goal>((i) => Goal.fromJson(i)).toList();
 }
 
 @freezed

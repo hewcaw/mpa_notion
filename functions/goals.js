@@ -31,6 +31,7 @@ exports.handler = async function(event, context) {
 			name: page.properties.Name.title[0].plain_text,
 			description: page.properties.Description.rich_text[0].plain_text,
 			category: page.properties.Category.multi_select[0].name,
+			categoryColor: page.properties.Category.multi_select[0].color,
 			date: page.properties.Date.date.end,
 			targets: await Promise.all(targets.map(async target => {
 				const blocks = await getBlocks(target.properties.Task.relation)

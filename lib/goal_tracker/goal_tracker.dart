@@ -46,6 +46,13 @@ class GoalTrackerController extends GetxController {
 }
 
 class GoalTrackerView extends GetView<GoalTrackerController> {
+  Color getColor(String color) {
+    if (color == "blue") return NotionColors.fgBlue;
+    if (color == "orange") return NotionColors.fgOrange;
+    if (color == "purple") return NotionColors.fgPurple;
+    return NotionColors.fgBlue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,24 +71,43 @@ class GoalTrackerView extends GetView<GoalTrackerController> {
           itemCount: controller.goals.length,
           itemBuilder: (BuildContext context, int index) {
             return [
-              GoalProgress(
-                  percent: controller.goals[index].progress,
-                  category: controller.goals[index].category),
-              Flexible(
-                child: [
-                  GoalInfo(goal: controller.goals[index]),
-                  SizedBox(height: 28),
-                  TargetList(targets: controller.goals[index].targets)
-                ].column(crossAlignment: CrossAxisAlignment.start).px(10),
-              ),
+              VxBox(child: Text(''))
+                  .height(6)
+                  .withConstraints(BoxConstraints(minWidth: double.infinity))
+                  .color(getColor(controller.goals[index].categoryColor))
+                  .make(),
               [
-                DueDate(date: controller.goals[index].date),
-                SizedBox(height: 8),
-                GoalCategory(category: controller.goals[index].category),
-              ].column(),
+                GoalProgress(
+                    percent: controller.goals[index].progress,
+                    category: controller.goals[index].category),
+                Flexible(
+                  child: [
+                    GoalInfo(goal: controller.goals[index]),
+                    SizedBox(height: 28),
+                    TargetList(targets: controller.goals[index].targets)
+                  ].column(crossAlignment: CrossAxisAlignment.start).px(10),
+                ),
+                [
+                  GoalCategory(
+                      category: controller.goals[index].category,
+                      color: getColor(controller.goals[index].categoryColor)),
+                  SizedBox(height: 8),
+                  DueDate(date: controller.goals[index].date),
+                ].column(crossAlignment: CrossAxisAlignment.end),
+              ]
+                  .row(
+                    alignment: MainAxisAlignment.spaceBetween,
+                    crossAlignment: CrossAxisAlignment.start,
+                  )
+                  .box
+                  .withConstraints(BoxConstraints(minWidth: double.infinity))
+                  .make()
             ]
-                .row(crossAlignment: CrossAxisAlignment.start)
-                .p8()
+                .column()
+                .box
+                .width(MediaQuery.of(context).size.width * 0.5)
+                .make()
+                // .p8()
                 .card
                 .rounded
                 .color(Color(0xff040505))
@@ -157,13 +183,20 @@ class DueDate extends StatelessWidget {
 }
 
 class GoalCategory extends StatelessWidget {
-  const GoalCategory({Key? key, required this.category}) : super(key: key);
+  const GoalCategory({Key? key, required this.category, required this.color}) : super(key: key);
 
   final String category;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return category.text.make().pSymmetric(v: 1, h: 4).box.orange500.rounded.make();
+    return category.text
+        .make()
+        .pSymmetric(v: 1, h: 4)
+        .box
+        .color(color)
+        .bottomLeftRounded(value: 6)
+        .make();
   }
 }
 

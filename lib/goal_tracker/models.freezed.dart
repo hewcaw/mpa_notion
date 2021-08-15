@@ -24,12 +24,14 @@ class _$GoalTearOff {
       {required String name,
       required String description,
       required String category,
+      required String categoryColor,
       String date = '',
       required List<Target> targets}) {
     return _Goal(
       name: name,
       description: description,
       category: category,
+      categoryColor: categoryColor,
       date: date,
       targets: targets,
     );
@@ -47,7 +49,9 @@ const $Goal = _$GoalTearOff();
 mixin _$Goal {
   String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError; // DateTime? date,
+  String get category => throw _privateConstructorUsedError;
+  String get categoryColor =>
+      throw _privateConstructorUsedError; // DateTime? date,
   String get date => throw _privateConstructorUsedError;
   List<Target> get targets => throw _privateConstructorUsedError;
 
@@ -64,6 +68,7 @@ abstract class $GoalCopyWith<$Res> {
       {String name,
       String description,
       String category,
+      String categoryColor,
       String date,
       List<Target> targets});
 }
@@ -81,6 +86,7 @@ class _$GoalCopyWithImpl<$Res> implements $GoalCopyWith<$Res> {
     Object? name = freezed,
     Object? description = freezed,
     Object? category = freezed,
+    Object? categoryColor = freezed,
     Object? date = freezed,
     Object? targets = freezed,
   }) {
@@ -96,6 +102,10 @@ class _$GoalCopyWithImpl<$Res> implements $GoalCopyWith<$Res> {
       category: category == freezed
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      categoryColor: categoryColor == freezed
+          ? _value.categoryColor
+          : categoryColor // ignore: cast_nullable_to_non_nullable
               as String,
       date: date == freezed
           ? _value.date
@@ -118,6 +128,7 @@ abstract class _$GoalCopyWith<$Res> implements $GoalCopyWith<$Res> {
       {String name,
       String description,
       String category,
+      String categoryColor,
       String date,
       List<Target> targets});
 }
@@ -136,6 +147,7 @@ class __$GoalCopyWithImpl<$Res> extends _$GoalCopyWithImpl<$Res>
     Object? name = freezed,
     Object? description = freezed,
     Object? category = freezed,
+    Object? categoryColor = freezed,
     Object? date = freezed,
     Object? targets = freezed,
   }) {
@@ -151,6 +163,10 @@ class __$GoalCopyWithImpl<$Res> extends _$GoalCopyWithImpl<$Res>
       category: category == freezed
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      categoryColor: categoryColor == freezed
+          ? _value.categoryColor
+          : categoryColor // ignore: cast_nullable_to_non_nullable
               as String,
       date: date == freezed
           ? _value.date
@@ -172,6 +188,7 @@ class _$_Goal extends _Goal {
       {required this.name,
       required this.description,
       required this.category,
+      required this.categoryColor,
       this.date = '',
       required this.targets})
       : super._();
@@ -185,6 +202,8 @@ class _$_Goal extends _Goal {
   final String description;
   @override
   final String category;
+  @override
+  final String categoryColor;
   @JsonKey(defaultValue: '')
   @override // DateTime? date,
   final String date;
@@ -193,7 +212,7 @@ class _$_Goal extends _Goal {
 
   @override
   String toString() {
-    return 'Goal(name: $name, description: $description, category: $category, date: $date, targets: $targets)';
+    return 'Goal(name: $name, description: $description, category: $category, categoryColor: $categoryColor, date: $date, targets: $targets)';
   }
 
   @override
@@ -208,6 +227,9 @@ class _$_Goal extends _Goal {
             (identical(other.category, category) ||
                 const DeepCollectionEquality()
                     .equals(other.category, category)) &&
+            (identical(other.categoryColor, categoryColor) ||
+                const DeepCollectionEquality()
+                    .equals(other.categoryColor, categoryColor)) &&
             (identical(other.date, date) ||
                 const DeepCollectionEquality().equals(other.date, date)) &&
             (identical(other.targets, targets) ||
@@ -220,6 +242,7 @@ class _$_Goal extends _Goal {
       const DeepCollectionEquality().hash(name) ^
       const DeepCollectionEquality().hash(description) ^
       const DeepCollectionEquality().hash(category) ^
+      const DeepCollectionEquality().hash(categoryColor) ^
       const DeepCollectionEquality().hash(date) ^
       const DeepCollectionEquality().hash(targets);
 
@@ -239,6 +262,7 @@ abstract class _Goal extends Goal {
       {required String name,
       required String description,
       required String category,
+      required String categoryColor,
       String date,
       required List<Target> targets}) = _$_Goal;
   _Goal._() : super._();
@@ -251,6 +275,8 @@ abstract class _Goal extends Goal {
   String get description => throw _privateConstructorUsedError;
   @override
   String get category => throw _privateConstructorUsedError;
+  @override
+  String get categoryColor => throw _privateConstructorUsedError;
   @override // DateTime? date,
   String get date => throw _privateConstructorUsedError;
   @override
