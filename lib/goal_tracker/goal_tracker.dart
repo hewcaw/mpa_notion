@@ -72,20 +72,23 @@ class GoalTrackerView extends GetView<GoalTrackerController> {
           itemBuilder: (BuildContext context, int index) {
             return [
               VxBox(child: Text(''))
-                  .height(6)
-                  .withConstraints(BoxConstraints(minWidth: double.infinity))
+                  .height(10)
+                  .width(MediaQuery.of(context).size.width)
                   .color(getColor(controller.goals[index].categoryColor))
                   .make(),
               [
                 GoalProgress(
-                    percent: controller.goals[index].progress,
-                    category: controller.goals[index].category),
+                        percent: controller.goals[index].progress,
+                        category: controller.goals[index].category)
+                    .pOnly(top: 16, left: 16),
                 Flexible(
+                  // FIXME: Why though? Otherwise it looks pretty dorky
+                  fit: FlexFit.tight,
                   child: [
                     GoalInfo(goal: controller.goals[index]),
                     SizedBox(height: 28),
                     TargetList(targets: controller.goals[index].targets)
-                  ].column(crossAlignment: CrossAxisAlignment.start).px(10),
+                  ].column(crossAlignment: CrossAxisAlignment.start).pSymmetric(v: 18, h: 16),
                 ),
                 [
                   GoalCategory(
@@ -100,20 +103,11 @@ class GoalTrackerView extends GetView<GoalTrackerController> {
                     crossAlignment: CrossAxisAlignment.start,
                   )
                   .box
-                  .withConstraints(BoxConstraints(minWidth: double.infinity))
+                  // .withConstraints(BoxConstraints(minWidth: double.infinity))
                   .make()
-            ]
-                .column()
-                .box
-                .width(MediaQuery.of(context).size.width * 0.5)
-                .make()
-                // .p8()
-                .card
-                .rounded
-                .color(Color(0xff040505))
-                .make();
+            ].column().card.rounded.color(Color(0xff040505)).make();
           },
-        );
+        ).box.width(MediaQuery.of(context).size.width * 0.65).make();
 
         // TODO: Handle error
         // else if (snapshot.hasError) return Text('${snapshot.error}');
@@ -178,7 +172,7 @@ class DueDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return '🔥 ${deadline} days'.text.make();
+    return '🔥 ${deadline} days'.text.make().pOnly(right: 8);
   }
 }
 
@@ -190,9 +184,9 @@ class GoalCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return category.text
+    return category.text.lg
         .make()
-        .pSymmetric(v: 1, h: 4)
+        .pSymmetric(v: 1, h: 8)
         .box
         .color(color)
         .bottomLeftRounded(value: 6)
