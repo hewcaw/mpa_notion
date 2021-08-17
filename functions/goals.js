@@ -84,22 +84,18 @@ function calculateTaskProgress(blocks, base) {
 	var checks = 0
 	var total = 0
 
+	// TODO: Use "for" instead because "forEach" can use "break"; Later, WTF?
 	blocks.forEach((item, index) => {
-	// for (const item in blocks) {	
-		total = total + 1
-
-		// TODO: Use "for" instead because "forEach" can use "break"
 		if (item.type == 'to_do') {
+			total = total + 1
 			if (item.to_do.checked) checks = checks + 1
 		} 
 	})
-
-  var isCompleted = (checks == total) ? true : false;
 	
 	return {
 		checks: checks,
 		total: total,
-		isCompleted: isCompleted,
+		isCompleted: (checks == total) ? true : false,
 	}
 }
 
