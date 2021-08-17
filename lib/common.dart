@@ -55,4 +55,5 @@ class AppColors {
 
 class Routes {
   static const goalTracker = '/goal_tracker';
+  static const timeReport = '/time_report';
 }

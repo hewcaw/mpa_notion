@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'common.dart';
 import 'goal_tracker/goal_tracker.dart';
+import 'time_report/time_report.dart';
 
 const Color notionBg = const Color(0xff2F3437);
 
@@ -19,13 +20,16 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: darkTheme,
       smartManagement: SmartManagement.full,
-      initialRoute: Routes.goalTracker,
+      initialRoute: Routes.timeReport,
       initialBinding: BindingsBuilder(() {
         Get.lazyPut(() => GoalTrackerController(), fenix: true);
         Get.lazyPut(() => GoalTrackerRepository(), fenix: true);
+        Get.lazyPut(() => TimeReportController(), fenix: true);
+        Get.lazyPut(() => TimeReportRepository(), fenix: true);
       }),
       getPages: [
         GetPage(name: Routes.goalTracker, page: () => GoalTrackerView()),
+        GetPage(name: Routes.timeReport, page: () => TimeReportView()),
       ],
     );
     // return MaterialApp(
