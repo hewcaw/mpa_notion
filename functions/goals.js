@@ -13,7 +13,13 @@ exports.handler = async function(event, context) {
 			relation: {
 					is_not_empty: true
 			}
-		}
+		},
+		sorts: [
+	    {
+	      property: "Goal Priority",
+	      direction: "ascending"
+	    }
+	  ]
 	});
 	
 	// const data = {}
@@ -25,6 +31,7 @@ exports.handler = async function(event, context) {
 			name: page.properties.Name.title[0].plain_text,
 			description: page.properties.Description.rich_text[0].plain_text,
 			category: page.properties.Category.multi_select[0].name,
+			categoryColor: page.properties.Category.multi_select[0].color,
 			date: page.properties.Date.date.end,
 			targets: await Promise.all(targets.map(async target => {
 				const blocks = await getBlocks(target.properties.Task.relation)
@@ -52,10 +59,6 @@ exports.handler = async function(event, context) {
 		headers: {
 			'Cache-Control': 'public, s-maxage=1800',
 	  	'Content-Type': 'application/json; charset=utf-8',
-			"Access-Control-Allow-Origin": "*", // Required for CORS support to work
-			"Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
-			"Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
-			"Access-Control-Allow-Methods": "POST, OPTIONS"
 		}
 	};
 }
@@ -81,22 +84,18 @@ function calculateTaskProgress(blocks, base) {
 	var checks = 0
 	var total = 0
 
+	// TODO: Use "for" instead because "forEach" can use "break"; Later, WTF?
 	blocks.forEach((item, index) => {
-	// for (const item in blocks) {	
-		total = total + 1
-
-		// TODO: Use "for" instead because "forEach" can use "break"
 		if (item.type == 'to_do') {
+			total = total + 1
 			if (item.to_do.checked) checks = checks + 1
 		} 
 	})
-
-  var isCompleted = (checks == total) ? true : false;
 	
 	return {
 		checks: checks,
 		total: total,
-		isCompleted: isCompleted,
+		isCompleted: (checks == total) ? true : false,
 	}
 }
 

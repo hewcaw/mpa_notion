@@ -1,7 +1,9 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'common.dart';
-import 'goals.dart';
+import 'goal_tracker/goal_tracker.dart';
+import 'time_report/time_report.dart';
 
 const Color notionBg = const Color(0xff2F3437);
 
@@ -12,13 +14,31 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // title: 'Flutter Demo',
+    return GetMaterialApp(
+      // title: 'List/Detail Demo',
+      debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
-      // theme: appTheme,
       darkTheme: darkTheme,
-      home: Goals(),
+      smartManagement: SmartManagement.full,
+      initialRoute: Routes.goalTracker,
+      initialBinding: BindingsBuilder(() {
+        Get.lazyPut(() => GoalTrackerController(), fenix: true);
+        Get.lazyPut(() => GoalTrackerRepository(), fenix: true);
+        Get.lazyPut(() => TimeReportController(), fenix: true);
+        Get.lazyPut(() => TimeReportRepository(), fenix: true);
+      }),
+      getPages: [
+        GetPage(name: Routes.goalTracker, page: () => GoalTrackerView()),
+        GetPage(name: Routes.timeReport, page: () => TimeReportView()),
+      ],
     );
+    // return MaterialApp(
+    //   // title: 'Flutter Demo',
+    //   themeMode: ThemeMode.dark,
+    //   // theme: appTheme,
+    //   darkTheme: darkTheme,
+    //   home: GoalTrackerView(),
+    // );
   }
 }
 
