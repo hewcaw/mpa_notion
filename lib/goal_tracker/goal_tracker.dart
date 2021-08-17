@@ -257,12 +257,17 @@ class TaskCount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return [
-      '${target.checks}/${target.total}'.text.make(),
+      // FIXME: Use text span instead, it's cleaner and has baseline setting
+      [
+        '${target.checks}/${target.total}'.text.make(),
+        SizedBox(width: 8),
+        '${(tasksPercent * 100).round()}%'.text.size(12).make(),
+      ].row(alignment: MainAxisAlignment.center, crossAlignment: CrossAxisAlignment.center),
       SizedBox(height: 2),
       RotatedBox(
         quarterTurns: 4,
         child: LinearPercentIndicator(
-          width: 55,
+          width: 80,
           animation: true,
           lineHeight: 4.0,
           animationDuration: 2500,
