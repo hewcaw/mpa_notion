@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: darkTheme,
       smartManagement: SmartManagement.full,
-      initialRoute: Routes.timeReport,
+      initialRoute: Routes.goalTracker,
       initialBinding: BindingsBuilder(() {
         Get.lazyPut(() => GoalTrackerController(), fenix: true);
         Get.lazyPut(() => GoalTrackerRepository(), fenix: true);

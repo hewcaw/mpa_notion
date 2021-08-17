@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../utils.dart' show NaNToZero;
+
 part 'models.freezed.dart';
 part 'models.g.dart';
 
@@ -18,24 +20,21 @@ class Goal with _$Goal {
     required List<Target> targets,
   }) = _Goal;
 
+  // I don't like my goal progress to wiggling around just because I added a new to-do
   double get progress {
     int checks = 0;
     int total = 0;
     targets.forEach((target) {
-      checks += target.taskCounts['checks']!;
-      total += target.taskCounts['total']!;
+      // checks += target.taskCounts['checks']!;
+      checks += target.checks;
+      // total += target.taskCounts['total']!;
+      total += target.total;
     });
     return checks / total;
   }
-  //   targets.fold<Map<String, int>>(0, (sum, next) {
-  // }
-  //       // final int total = targets.fold(0, (sum, next) => sum + next.total);
 
-  //       // return sum + (1 / total) * (next.checks / next.total);
-  //     });
-
-  // // double get goalPercent =>
-  // //     targets.fold(0, (sum, next) => sum + next.tasksPercent);
+  // double get goalPercent =>
+  //     targets.fold(0, (sum, next) => sum + next.tasksPercent);
 
   factory Goal.fromJson(Map<String, dynamic> json) => _$GoalFromJson(json);
 

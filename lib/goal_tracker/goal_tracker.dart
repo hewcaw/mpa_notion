@@ -4,6 +4,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter/material.dart';
 
 import '../common.dart' show NotionColors;
+import '../utils.dart' show NaNToZero;
 import 'models.dart';
 import 'repository.dart';
 
@@ -250,8 +251,8 @@ class TaskCount extends StatelessWidget {
 
   final Target target;
 
-  double get tasksPercent =>
-      (target.taskCounts['checks']! / target.taskCounts['total']!).toDouble();
+  num get tasksPercent =>
+      NaNToZero((target.taskCounts['checks']! / target.taskCounts['total']!).toDouble());
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +266,7 @@ class TaskCount extends StatelessWidget {
           animation: true,
           lineHeight: 4.0,
           animationDuration: 2500,
-          percent: tasksPercent,
+          percent: tasksPercent.toDouble(),
           linearStrokeCap: LinearStrokeCap.roundAll,
           progressColor: Colors.green,
         ),
