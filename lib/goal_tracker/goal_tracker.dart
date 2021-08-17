@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart';
 
 import '../common.dart' show NotionColors;
 import 'models.dart';
@@ -107,7 +106,7 @@ class GoalTrackerView extends GetView<GoalTrackerController> {
                   .make()
             ].column().card.rounded.color(Color(0xff040505)).make();
           },
-        ).box.width(MediaQuery.of(context).size.width * 0.65).make();
+        ).box.width(MediaQuery.of(context).size.width * 0.75).make().centered();
 
         // TODO: Handle error
         // else if (snapshot.hasError) return Text('${snapshot.error}');
@@ -217,12 +216,13 @@ class TargetItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return [
-      target.name.text.subtitle1(context).make(),
-      SizedBox(width: 8),
-      _buildStatusDot(),
-      SizedBox(width: 50),
+      [
+        target.name.text.lg.subtitle1(context).make(),
+        SizedBox(width: 8),
+        _buildStatusDot(),
+      ].row(alignment: MainAxisAlignment.spaceBetween),
       TaskCount(target: target),
-    ].row(alignment: MainAxisAlignment.start);
+    ].row(axisSize: MainAxisSize.max, alignment: MainAxisAlignment.spaceBetween);
   }
 
   Widget _buildStatusDot() {
@@ -250,25 +250,26 @@ class TaskCount extends StatelessWidget {
 
   final Target target;
 
+  double get tasksPercent =>
+      (target.taskCounts['checks']! / target.taskCounts['total']!).toDouble();
+
   @override
   Widget build(BuildContext context) {
-    return '${target.checks}/${target.total}'.text.make();
-    // return [
-    //   [
-    //     ''.text.make(),
-    //   ].row(alignment: MainAxisAlignment.spaceBetween),
-    //   RotatedBox(
-    //     quarterTurns: 2,
-    //     child: LinearPercentIndicator(
-    //       width: 100,
-    //       animation: true,
-    //       lineHeight: 5.0,
-    //       animationDuration: 2500,
-    //       percent: 0.6,
-    //       linearStrokeCap: LinearStrokeCap.roundAll,
-    //       progressColor: Colors.green,
-    //     ),
-    //   ),
-    // ].column();
+    return [
+      '${target.checks}/${target.total}'.text.make(),
+      SizedBox(height: 2),
+      RotatedBox(
+        quarterTurns: 4,
+        child: LinearPercentIndicator(
+          width: 55,
+          animation: true,
+          lineHeight: 4.0,
+          animationDuration: 2500,
+          percent: tasksPercent,
+          linearStrokeCap: LinearStrokeCap.roundAll,
+          progressColor: Colors.green,
+        ),
+      ),
+    ].column();
   }
 }
